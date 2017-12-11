@@ -44,7 +44,9 @@ app.get('/lists/:id', function(req, res) {
 
 app.post('/lists', function(req, res) {
     var query = req.body.id == null ? `INSERT INTO lists SET ?`: `UPDATE lists SET ? WHERE id = ${req.body.id}`,
-    post = {name: req.body.name, is_shared: req.body.is_shared, value_max: 0, value_min: 0};
+    post = {name: req.body.name, is_shared: req.body.is_shared};
+    post.value_max = req.body.value_max ? req.body.value_max : 0;
+    post.value_min = req.body.value_min ? req.body.value_min : 0;
     db.query(query, post, function(err) {
         if (err) throw err;
         res.type('json');
