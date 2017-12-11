@@ -41,8 +41,8 @@ app.get('/lists/:id', function(req, res) {
         res.send(JSON.stringify(rows));
     });
 });
-app.post('/lists', function(req, res) {
 
+app.post('/lists', function(req, res) {
     var query = req.body.id == null ? `INSERT INTO lists SET ?`: `UPDATE lists SET ? WHERE id = ${req.body.id}`,
     post = {name: req.body.name, is_shared: req.body.is_shared, value_max: 0, value_min: 0};
     db.query(query, post, function(err) {
@@ -50,9 +50,18 @@ app.post('/lists', function(req, res) {
         res.type('json');
         res.send(JSON.stringify({status: "OK"}));
     });
-
 });
  
+ 
+app.delete('/lists/:id', function(req, res) {
+    var id = parseInt(req.params.id, 10);
+    db.query(`DELETE FROM lists WHERE id = ${id}`, id, function(err) {
+        if (err) throw err;
+        res.type('json');
+        res.send(JSON.stringify({status: "OK"}));
+    });
+});
+
 var server = app.listen(3001, function () {
   var host = server.address().address;
   host = (host === '::' ? 'localhost' : host);
